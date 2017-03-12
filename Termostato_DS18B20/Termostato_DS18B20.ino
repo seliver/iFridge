@@ -8,7 +8,9 @@ const int indicador = 13;
 int ligado = 0;
 long counter = 0;
 int first = 1;
-
+int lastSignBit;
+int lastTemperature;
+int myTemps[] = {0,0,0,0,0,0,0,0,0,0};
 
 void setup(void) { // initialize inputs/outputs & start serial port
   Serial.begin(9600);
@@ -25,9 +27,11 @@ void loop(void) {
   byte addr[8];
   ds.reset_search();
   if ( !ds.search(addr)) {
-      Serial.print("No more addresses.\n");
-      if (ligado == 0){
+      if (ligado == 0 && ( lastSignBit != -32768 && lastTemperature >= 2 ) ){
+        Serial.print("No more addresses.\n");
         Serial.print("motor ligado.\n");
+        Serial.print("ultima temp: ");
+        Serial.println(lastTemperature);
         digitalWrite (motor, HIGH);
         ligado = 1;
       }
@@ -83,10 +87,7 @@ void loop(void) {
      Serial.print("0");
   }
   Serial.print(Fract);
-
-  Serial.print("\n");
-  Serial.println(SignBit);
-  
+  Serial.print("\n");  
 //  OPERAÇÃO COM MOTOR
 
   if (SignBit != -32768 && Temperatura >= 2){ // compara se a temperatura é + ou - e compara com temperatura máxima precetada
@@ -95,4 +96,6 @@ void loop(void) {
   else if (SignBit == -32768 && Temperatura >= 15) { // compara se a temperatura é + ou - e compara com temperatura mínima precetada
    digitalWrite (motor, LOW);
   }
+  lastSignBit = SignBit;
+  lastTemperature = Temperatura;
 }
