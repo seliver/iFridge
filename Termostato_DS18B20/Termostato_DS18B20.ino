@@ -5,28 +5,49 @@
 OneWire ds(9);  // on pin 10
 const int motor = 12;
 const int indicador = 13;
-int ligado = 0;
+int ligado = 1;
 long counter = 0;
 int first = 1;
 int lastSignBit;
 int lastTemperature;
-int myTemps[] = {0,0,0,0,0,0,0,0,0,0};
 
 void setup(void) { // initialize inputs/outputs & start serial port
   Serial.begin(9600);
   pinMode (motor, OUTPUT);
   pinMode (indicador, OUTPUT);
+  digitalWrite (motor, HIGH);
 }
 
+
+void loop(void){
+  counter++;
+  Serial.println(counter);
+  if (ligado == 0) {
+    if (counter > 2000000){
+      ligado = 1;
+      counter = 0;
+      digitalWrite (motor, HIGH);
+    }
+  }else{
+    if (counter > 100000){
+      ligado = 0;
+      counter = 0;
+      digitalWrite (motor, LOW);
+    }
+  }
+}
 // First off, you need to define some variables, (put right under loop() above)
 int HighByte, LowByte, TReading, SignBit, Tc_100, Temperatura, Fract;
-void loop(void) {
+void loop2(void) {
+  counter++;
+  Serial.println(counter);
   byte i;
   byte present = 0;
   byte data[12];
   byte addr[8];
   ds.reset_search();
   if ( !ds.search(addr)) {
+      //Serial.print("No more addresses.\n");
       if (ligado == 0 && ( lastSignBit != -32768 && lastTemperature >= 2 ) ){
         Serial.print("No more addresses.\n");
         Serial.print("motor ligado.\n");
@@ -39,9 +60,9 @@ void loop(void) {
       return;
   }
   ligado = 0;
-  if ( OneWire::crc8( addr, 7) != addr[7]) {
+  if ( OneWire::crc8( addr, 7) != addr[7] ) {
       Serial.print("CRC is not valid!\n");
-      if (ligado == 0){
+      if (ligado == 0 && ( lastSignBit != -32768 && lastTemperature >= 2 )){
         Serial.print("motor ligado.\n");
         digitalWrite (motor, HIGH);
         ligado = 1;
