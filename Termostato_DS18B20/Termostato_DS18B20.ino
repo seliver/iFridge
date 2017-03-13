@@ -29,7 +29,7 @@ void loop(void){
       digitalWrite (motor, HIGH);
     }
   }else{
-    if (counter > 100000){
+    if (counter > 500000){
       ligado = 0;
       counter = 0;
       digitalWrite (motor, LOW);
