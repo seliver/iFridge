@@ -15,26 +15,16 @@ void setup(void) { // initialize inputs/outputs & start serial port
   Serial.begin(9600);
   pinMode (motor, OUTPUT);
   pinMode (indicador, OUTPUT);
-  digitalWrite (motor, HIGH);
 }
 
 
 void loop(void){
-  counter++;
-  Serial.println(counter);
-  if (ligado == 0) {
-    if (counter > 2000000){
-      ligado = 1;
-      counter = 0;
-      digitalWrite (motor, HIGH);
-    }
-  }else{
-    if (counter > 500000){
-      ligado = 0;
-      counter = 0;
-      digitalWrite (motor, LOW);
-    }
-  }
+  Serial.println("motor ligado");
+  digitalWrite (motor, HIGH);
+  delay(900000);
+  Serial.println("motor desligado");
+  digitalWrite (motor, LOW);
+  delay(2400000);
 }
 // First off, you need to define some variables, (put right under loop() above)
 int HighByte, LowByte, TReading, SignBit, Tc_100, Temperatura, Fract;
