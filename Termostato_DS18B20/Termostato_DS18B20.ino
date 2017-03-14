@@ -24,7 +24,7 @@ void loop(void){
   delay(900000);
   Serial.println("motor desligado");
   digitalWrite (motor, LOW);
-  delay(2400000);
+  delay(2700000);
 }
 // First off, you need to define some variables, (put right under loop() above)
 int HighByte, LowByte, TReading, SignBit, Tc_100, Temperatura, Fract;
